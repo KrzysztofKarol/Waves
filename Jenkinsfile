@@ -109,11 +109,11 @@ timeout(time:90, unit:'MINUTES') {
                             stage('Unit tests') {
                                 unstash 'sources'
                                 try{
-                                    ut.sbt '-Dquill.macro.log=false -J-Xms3G -J-Xmx3G -J-XX:+UseConcMarkSweepGC -J-XX:+CMSClassUnloadingEnabled ";coverage;checkPR;coverageReport"'
+                                    ut.sbt '-mem 10240 -Dquill.macro.log=false -J-Xms3G -J-Xmx3G -J-XX:+UseConcMarkSweepGC -J-XX:+CMSClassUnloadingEnabled ";coverage;checkPR;coverageReport"'
                                 }
                                 finally{
                                     sh "tar -czvf test-reports.tar.gz -C target/test-reports/ . || true"
-                                    stash name: 'test-reports', includes 'test-reports.tar.gz'
+                                    stash name: 'test-reports', includes: 'test-reports.tar.gz'
                                 }
                             }
                         }
@@ -136,7 +136,7 @@ timeout(time:90, unit:'MINUTES') {
                                     finally{
                                         sh "docker system prune -af --volumes || true"
                                         sh "tar -czvf node-logs.tar.gz -C node-it/target/logs/ . || true"
-                                        stash name: 'node-logs', includes 'node-logs.tar.gz'
+                                        stash name: 'node-logs', includes: 'node-logs.tar.gz'
                                     }
                                 }
                             }
