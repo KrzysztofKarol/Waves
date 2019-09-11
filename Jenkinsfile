@@ -101,7 +101,7 @@ timeout(time:90, unit:'MINUTES') {
                         ut.checkout(branch, repoUrl)
                         gitCommit = ut.shWithOutput("git rev-parse HEAD")
                         stash name: 'sources', includes: '**'
-                        ut.setGitHubBuildStatus(buildImageName, githubPersonalToken, gitCommit)
+                        ut.setGitHubBuildStatus(githubRepo, githubPersonalToken, gitCommit)
                     }
 
                     testTasks['Unit tests'] = {
@@ -155,6 +155,7 @@ timeout(time:90, unit:'MINUTES') {
                     println(err.toString())
                  }
                 finally{
+                    ut.setGitHubBuildStatus(githubRepo, githubPersonalToken, gitCommit, currentBuild.result);
                     unstash 'node-logs'
                     unstash 'test-reports'
                     archiveArtifacts artifacts: 'node-logs.tar.gz, test-reports.tar.gz'
