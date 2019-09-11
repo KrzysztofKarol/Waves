@@ -25,7 +25,7 @@ import devops.waves.*
 ut = new utils()
 scripts = new scripts()
 def buildTasks = [:]
-def repo_url = 'https://github.com/wavesplatform/Waves.git'
+def repoUrl = 'https://github.com/wavesplatform/Waves.git'
 def branch = false
 def testTasks = [:]
 def gitCommit
@@ -35,8 +35,8 @@ def githubPersonalToken = 'waves-github-token'
 properties([
     ut.buildDiscarderPropertyObject('14', '30'),
     parameters([
-        ut.stringParameterDefinitionObject('pr_from_ref'),
-        ut.choiceParameterObject('branch', scripts.getBranches(repo_url), Boolean.TRUE)
+        ut.wHideParameterDefinitionObject('pr_from_ref'),
+        ut.choiceParameterObject('branch', scripts.getBranches(repoUrl), Boolean.TRUE)
     ]),
 
     pipelineTriggers([
