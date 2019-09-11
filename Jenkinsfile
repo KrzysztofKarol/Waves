@@ -153,12 +153,12 @@ timeout(time:90, unit:'MINUTES') {
                     println(err.getCause())
                     println(err.getLocalizedMessage())
                     println(err.toString())
-                 }
-                finally{
-                    ut.setGitHubBuildStatus(githubRepo, githubPersonalToken, gitCommit, currentBuild.result);
                     unstash 'node-logs'
                     unstash 'test-reports'
                     archiveArtifacts artifacts: 'node-logs.tar.gz, test-reports.tar.gz'
+                 }
+                finally{
+                    ut.setGitHubBuildStatus(githubRepo, githubPersonalToken, gitCommit, currentBuild.result);
                     ut.notifySlack("jenkins-notifications", currentBuild.result)
                 }
             }
