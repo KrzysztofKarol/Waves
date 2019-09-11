@@ -23,6 +23,7 @@ To set up pipeline in Jenkins: New Item > Pipeline > name it > OK > Scroll to Pi
 @Library('jenkins-shared-lib')
 import devops.waves.*
 ut = new utils()
+scripts = new scripts()
 def buildTasks = [:]
 def repo_url = 'https://github.com/wavesplatform/Waves.git'
 def branch = false
