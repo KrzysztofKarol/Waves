@@ -135,7 +135,7 @@ timeout(time:90, unit:'MINUTES') {
                                     sh """
                                         env
                                         find ~/.ivy2/ -name '*SNAPSHOT*' -exec rm -rfv {} \\; || true
-                                        docker ps -a -q --filter 'ancestor=com.wavesplatform/node-it' |xargs --no-run-if-empty  docker rm
+                                        docker ps -a -q --filter 'ancestor=com.wavesplatform/node-it' |xargs --no-run-if-empty  docker rm || true
                                         docker ps -a
                                         docker images
                                         docker network ls
