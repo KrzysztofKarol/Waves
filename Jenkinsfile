@@ -105,7 +105,7 @@ timeout(time:90, unit:'MINUTES') {
                     }
 
                     testTasks['Unit tests'] = {
-                        node('wavesnode'){
+                        node('vostok'){
                             stage('Unit tests') {
                                 unstash 'sources'
                                 try{
@@ -120,7 +120,7 @@ timeout(time:90, unit:'MINUTES') {
                     }
 
                     testTasks['Integration Test'] = {
-                        node('wavesnode'){
+                        node('vostok'){
                             withEnv(["SBT_THREAD_NUMBER=7"]) {
                                 stage('Integration Test') {
                                     unstash 'sources'
