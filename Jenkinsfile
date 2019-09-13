@@ -153,7 +153,8 @@ timeout(time:90, unit:'MINUTES') {
                             }
                         }
                     }
-                    testTasks.failFast = true
+                    // this option below controls if we fail the whole job in case any of the parallel steps fail
+                    // testTasks.failFast = true
                     parallel testTasks
                 }
                 catch (err) {
