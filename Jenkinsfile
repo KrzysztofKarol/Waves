@@ -107,19 +107,22 @@ timeout(time:90, unit:'MINUTES') {
                     testTasks['Unit tests'] = {
                         node('vostok'){
                             stage('Unit tests') {
-                                withEnv(["SBT_THREAD_NUMBER=7", "SBT_OPTS=-Dquill.macro.log=false -Xms3G -Xmx3G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"]) {
-                                    step([$class: 'WsCleanup'])
-                                    unstash 'sources'
-                                    sh """
-                                        env
-                                        find ~/.ivy2/ -name '*SNAPSHOT*' -exec rm -rfv {} \\; || true
-                                    """
-                                    try{
-                                        ut.sbt '";update ;clean ;coverage ;checkPR ;coverageReport"'
-                                    }
-                                    finally{
-                                        sh "tar -czvf unit-test-reports.tar.gz -C target/test-reports/ . || true"
-                                        stash name: 'test-reports', includes: 'unit-test-reports.tar.gz'
+                                docker.withRegistry('', 'deploybotjenkins-dockerhub-creds') {
+                                    docker.image('openjdk:11-jdk-stretch').inside('-u 0') { c ->
+                                        try{
+                                            unstash 'sources'
+                                            sh """
+                                                java -version
+                                                curl -fsSL https://piccolo.link/sbt-1.3.0.tgz -o /tmp/sbt-1.3.0.tgz
+                                                tar -xzf /tmp/sbt-1.3.0.tgz -C /opt/
+                                                ln -fs /opt/sbt/bin/sbt /bin/sbt
+                                                SBT_THREAD_NUMBER=7 sbt -Dquill.macro.log=false -J-Xms3G -J-Xmx3G -J-XX:+CMSClassUnloadingEnabled ";coverage;checkPR;coverageReport"
+                                            """
+                                        }
+                                        finally{
+                                            sh "tar -czvf unit-test-reports.tar.gz -C target/test-reports/ . || true"
+                                            stash name: 'test-reports', includes: 'unit-test-reports.tar.gz'
+                                        }
                                     }
                                 }
                             }
