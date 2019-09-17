@@ -42,14 +42,14 @@ properties([
     pipelineTriggers([
         [$class: 'GenericTrigger',
         genericVariables: [
-            [ key: 'source', value: '$.ref', regexpFilter: 'refs/heads/', defaultValue: '' ],
+            [ key: 'branch', value: '$.ref', regexpFilter: 'refs/heads/', defaultValue: '' ],
             [ key: 'push_from_sha', value: '$.after'],
             [ key: 'pr_action', value: '$.action'],
             [ key: 'deleted', value: '$.deleted'],
             [ key: 'pr_from_ref', value: '$.pull_request.head.ref' ],
             [ key: 'pr_from_sha', value: '$.pull_request.head.sha' ]],
         // this is a place where some magic occurs ;)
-        regexpFilterText: '$deleted$source$pr_action',
+        regexpFilterText: '$deleted$branch$pr_action',
         regexpFilterExpression: 'falsemaster|falseversion.+|opened|reopened|synchronize',
         causeString: "Triggered by GitHub Webhook",
         printContributedVariables: true,
